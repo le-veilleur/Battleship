@@ -40,6 +40,7 @@ func ServeWS(w http.ResponseWriter, r *http.Request) {
 	var roomID string
 	var playerIdx int
 
+	// read messages from the client
 	for {
 		var msg game.ClientMsg
 		if err := wsjson.Read(ctx, conn, &msg); err != nil {

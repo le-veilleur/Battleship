@@ -152,6 +152,12 @@ Battleship/
     └── vite.config.ts
 ```
 
+## Documentation
+
+- [Architecture WebSocket](./docs/websocket.md)
+- [Architecture Backend](./docs/backend.md)
+- [Architecture Frontend](./docs/frontend.md)
+
 ## 🗺️ Roadmap
 
 - [x] Logique de jeu (placement, tirs, fin de partie)
