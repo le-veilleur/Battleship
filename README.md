@@ -1,3 +1,9 @@
+## Documentation
+
+- [Architecture WebSocket](./docs/websocket.md)
+- [Architecture Backend](./docs/backend.md)
+- [Architecture Frontend](./docs/frontend.md)
+
 # ⚓ Battleship — Multijoueur en temps réel
 
 Un jeu de bataille navale en ligne, jouable à deux dans le navigateur. Projet réalisé pour explorer la communication temps réel entre un backend Go et un frontend React, avec une architecture serveur autoritaire.
@@ -151,12 +157,6 @@ Battleship/
     ├── package.json
     └── vite.config.ts
 ```
-
-## Documentation
-
-- [Architecture WebSocket](./docs/websocket.md)
-- [Architecture Backend](./docs/backend.md)
-- [Architecture Frontend](./docs/frontend.md)
 
 ## 🗺️ Roadmap
 
