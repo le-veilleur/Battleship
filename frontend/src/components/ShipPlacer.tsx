@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react'
-import Board from './Board'
 import { FLEET, type Cell, type CellState, type Orientation, type PlacedShip } from '../types/game'
 
 interface Props {

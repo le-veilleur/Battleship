@@ -14,6 +14,7 @@ interface GameStore {
   ws:               WebSocket | null
   connectionStatus: 'disconnected' | 'connecting' | 'connected'
   phase:            GamePhase
+  pseudo:           string
   roomId:           string | null
   playerIdx:        number | null
   isMyTurn:         boolean
@@ -23,6 +24,7 @@ interface GameStore {
   youWin:           boolean | null
 
   connect:         () => void
+  setPseudo:       (pseudo: string) => void
   createRoom:      () => void
   joinRoom:        (roomId: string) => void
   submitPlacement: (ships: PlacedShip[]) => void
@@ -34,6 +36,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   ws:               null,
   connectionStatus: 'disconnected',
   phase:            'home',
+  pseudo:           '',
   roomId:           null,
   playerIdx:        null,
   isMyTurn:         false,
@@ -68,12 +71,20 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({ ws })
   },
 
+  setPseudo(pseudo: string) {
+    set({ pseudo })
+  },
+
   createRoom() {
-    send(get().ws, { type: 'create_room' })
+    const { ws, pseudo } = get()
+    if (pseudo) send(ws, { type: 'set_pseudo', pseudo })
+    send(ws, { type: 'create_room' })
   },
 
   joinRoom(roomId: string) {
-    send(get().ws, { type: 'join_room', room_id: roomId.toUpperCase() })
+    const { ws, pseudo } = get()
+    if (pseudo) send(ws, { type: 'set_pseudo', pseudo })
+    send(ws, { type: 'join_room', room_id: roomId.toUpperCase() })
   },
 
   submitPlacement(ships: PlacedShip[]) {
@@ -91,7 +102,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     get().ws?.close()
     set({
       ws: null, connectionStatus: 'disconnected',
-      phase: 'home', roomId: null, playerIdx: null,
+      phase: 'home', pseudo: '', roomId: null, playerIdx: null,
       isMyTurn: false, myBoard: emptyBoard(), enemyBoard: emptyBoard(),
       placedShips: [], youWin: null,
     })

@@ -4,6 +4,7 @@ import { useGameStore } from '../store/gameStore'
 import Board from '../components/Board'
 import ShipPlacer from '../components/ShipPlacer'
 import ConnectionStatus from '../components/ConnectionStatus'
+import Leaderboard from '../components/Leaderboard'
 import type { CellState, PlacedShip } from '../types/game'
 
 export default function Game() {
@@ -91,6 +92,7 @@ export default function Game() {
               <Board cells={myBoardWithShips} label="Ta flotte" />
               <Board cells={enemyBoard} label="Grille adverse" />
             </div>
+            <Leaderboard />
             <button
               onClick={() => { reset(); navigate('/') }}
               className="px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold transition-colors"

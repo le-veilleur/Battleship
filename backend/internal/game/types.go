@@ -14,6 +14,7 @@ type Ship struct {
 type ClientMsg struct {
 	Type   string `json:"type"`
 	RoomID string `json:"room_id"`
+	Pseudo string `json:"pseudo"`
 	Ships  []Ship `json:"ships"`
 	X      int    `json:"x"`
 	Y      int    `json:"y"`

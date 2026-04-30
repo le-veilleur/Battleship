@@ -6,7 +6,9 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"runtime"
+	"strings"
 	"time"
 
 	"battleship/internal/game"
@@ -16,12 +18,19 @@ import (
 	"github.com/coder/websocket/wsjson"
 )
 
+func allowedOrigins() []string {
+	if v := os.Getenv("ALLOWED_ORIGINS"); v != "" {
+		return strings.Split(v, ",")
+	}
+	return []string{"localhost:5173", "localhost"}
+}
+
 // ServeWS upgrade la connexion HTTP en WebSocket, crée un Client,
 // lance WritePump dans une goroutine, puis boucle en lecture jusqu'à déconnexion.
 func ServeWS(w http.ResponseWriter, r *http.Request) {
 	// accepte c'est ce qui fait le handshake et upgrade la connexion HTTP en WebSocket
 	conn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
-		OriginPatterns: []string{"localhost:5173"}, // seul le host est matché, pas le scheme
+		OriginPatterns: allowedOrigins(),
 	})
 	if err != nil {
 		log.Printf("ws accept: %v", err)
@@ -64,8 +73,22 @@ func ServeRooms(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(rooms)
 }
 
+func ServeLeaderboard(w http.ResponseWriter, r *http.Request) {
+	scores := ws.GlobalLeaderboard.List()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(scores)
+}
+
 func dispatch(client *ws.Client, roomID *string, playerIdx *int, msg game.ClientMsg) {
 	switch msg.Type {
+
+	case "set_pseudo":
+		if msg.Pseudo == "" {
+			client.Send <- map[string]any{"type": "error", "message": "pseudo cannot be empty"}
+			return
+		}
+		client.Pseudo = msg.Pseudo
+		client.Send <- map[string]any{"type": "pseudo_set", "pseudo": msg.Pseudo}
 
 	case "create_room":
 		rid := newRoomID()
@@ -126,6 +149,9 @@ func dispatch(client *ws.Client, roomID *string, playerIdx *int, msg game.Client
 		}
 		if fr.ShipCells != nil {
 			fireResult["ship_cells"] = fr.ShipCells
+		}
+		if fr.GameOver && client.Pseudo != "" {
+			ws.GlobalLeaderboard.AddWin(client.Pseudo)
 		}
 		client.Send <- fireResult
 

@@ -21,6 +21,7 @@ func main() {
 
 	r.Get("/ws", handler.ServeWS)
 	r.Get("/rooms", handler.ServeRooms)
+	r.Get("/leaderboard", handler.ServeLeaderboard)
 
 	log.Printf("server listening on :8080")
 	if err := http.ListenAndServe(":8080", r); err != nil {

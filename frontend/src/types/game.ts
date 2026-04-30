@@ -42,6 +42,7 @@ export type ServerMessage =
 
 // Messages envoyés au serveur
 export type ClientMessage =
+  | { type: 'set_pseudo';  pseudo: string }
   | { type: 'create_room' }
   | { type: 'join_room';   room_id: string }
   | { type: 'place_ships'; ships: PlacedShip[] }

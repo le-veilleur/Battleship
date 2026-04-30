@@ -10,9 +10,10 @@ import (
 
 // Client encapsule une connexion WebSocket et un canal d'envoi asynchrone.
 type Client struct {
-	Conn *websocket.Conn
-	Send chan any
-	Addr string // adresse distante, utilisée pour les logs
+	Conn   *websocket.Conn
+	Send   chan any
+	Addr   string
+	Pseudo string
 }
 
 func NewClient(conn *websocket.Conn, addr string) *Client {
