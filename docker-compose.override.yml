@@ -1,0 +1,21 @@
+services:
+  backend:
+    networks:
+      - local
+    environment:
+      - ALLOWED_ORIGINS=localhost
+
+  frontend:
+    build:
+      args:
+        VITE_WS_URL: ws://localhost:8080/ws
+    ports:
+      - "8081:80"
+    networks:
+      - local
+    labels: []
+
+networks:
+  local:
+    driver: bridge
+
