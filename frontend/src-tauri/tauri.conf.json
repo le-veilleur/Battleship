@@ -35,7 +35,13 @@
     ],
     "externalBin": ["binaries/battleship-ble-host"],
     "macOS": {
-      "infoPlist": "../src-tauri/Info.plist"
+      "infoPlist": "../src-tauri/Info.plist",
+      "dmg": {
+        "background": "icons/dmg-background.png",
+        "windowSize": { "width": 660, "height": 400 },
+        "appPosition": { "x": 180, "y": 230 },
+        "applicationFolderPosition": { "x": 480, "y": 230 }
+      }
     }
   }
 }
