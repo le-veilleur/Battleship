@@ -7,6 +7,59 @@ import P2PSetup from '../components/P2PSetup'
 
 type Mode = 'online' | 'p2p' | 'bluetooth'
 
+const isTauri = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
+
+function BluetoothDownloadPage() {
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Explication */}
+      <div className="bg-cyan-900/20 border border-cyan-700/40 rounded-xl p-4 text-center">
+        <div className="text-3xl mb-2">📱</div>
+        <p className="text-cyan-300 font-semibold text-sm mb-1">App desktop requise</p>
+        <p className="text-slate-400 text-xs leading-relaxed">
+          Le Bluetooth utilise CoreBluetooth, une API native macOS. Le navigateur n'y a pas accès.
+          Il faut installer l'application desktop Battleship.
+        </p>
+      </div>
+
+      {/* Étapes */}
+      <div className="flex flex-col gap-2">
+        {[
+          { n: '1', label: 'Télécharger', desc: 'Clique le bouton ci-dessous pour télécharger le .dmg macOS' },
+          { n: '2', label: 'Installer', desc: 'Glisse Battleship.app dans ton dossier Applications' },
+          { n: '3', label: 'Ouvrir', desc: 'Lance l\'app → onglet "Bluetooth" disponible' },
+          { n: '4', label: 'Jouer', desc: 'Les deux joueurs lancent l\'app → Héberger / Scanner' },
+        ].map(({ n, label, desc }) => (
+          <div key={n} className="flex gap-3 items-start">
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-700 text-white text-xs font-bold flex items-center justify-center mt-0.5">
+              {n}
+            </span>
+            <div>
+              <p className="text-white text-sm font-medium">{label}</p>
+              <p className="text-slate-400 text-xs">{desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Bouton download */}
+      <a
+        href="https://github.com/le-veilleur/Battleship/releases/latest"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center gap-2 py-3 bg-cyan-600 hover:bg-cyan-500 rounded-lg font-semibold text-sm transition-colors"
+      >
+        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+        Télécharger Battleship.dmg
+      </a>
+
+      <p className="text-slate-500 text-xs text-center">macOS uniquement · Bluetooth 4.0+ requis</p>
+    </div>
+  )
+}
+
 export default function Home() {
   const navigate = useNavigate()
   const {
@@ -139,59 +192,62 @@ export default function Home() {
 
         {/* Mode Bluetooth */}
         {mode === 'bluetooth' && (
-          <div className="flex flex-col gap-3">
-            <div className="bg-cyan-900/30 border border-cyan-700/50 rounded-lg p-3 text-xs text-cyan-300">
-              Fonctionne sans WiFi ni internet. Les deux appareils doivent avoir l'app installée via Tauri.
-            </div>
-
-            {/* Deux rôles possibles */}
-            <div className="flex gap-2">
-              <button
-                onClick={handleBleHost}
-                disabled={connectionStatus === 'connecting' || connectionStatus === 'bluetooth'}
-                className="flex-1 py-2.5 bg-cyan-800 hover:bg-cyan-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors"
-              >
-                {connectionStatus === 'bluetooth' ? '📡 En attente…' : 'Héberger'}
-              </button>
-              <button
-                onClick={handleBleScan}
-                disabled={connectionStatus === 'connecting' || connectionStatus === 'bluetooth'}
-                className="flex-1 py-2.5 bg-cyan-700 hover:bg-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors"
-              >
-                {connectionStatus === 'connecting' ? 'Scan…' : 'Scanner'}
-              </button>
-            </div>
-
-            {bleError && (
-              <p className="text-red-400 text-xs bg-red-950/40 border border-red-800/50 rounded p-2">
-                {bleError}
-              </p>
-            )}
-
-            {bleDevices.length > 0 && (
-              <div className="flex flex-col gap-1.5">
-                <p className="text-slate-400 text-xs">{bleDevices.length} appareil(s) trouvé(s)</p>
-                {bleDevices.map(device => (
-                  <button
-                    key={device.id}
-                    onClick={() => handleBleConnect(device.id)}
-                    className="flex items-center justify-between px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors"
-                  >
-                    <span>{device.name}</span>
-                    <span className="text-slate-400 text-xs">
-                      {device.rssi != null ? `${device.rssi} dBm` : ''}
-                    </span>
-                  </button>
-                ))}
+          isTauri ? (
+            <div className="flex flex-col gap-3">
+              <div className="bg-cyan-900/30 border border-cyan-700/50 rounded-lg p-3 text-xs text-cyan-300">
+                Fonctionne sans WiFi ni internet. Les deux appareils doivent avoir l'app installée.
               </div>
-            )}
 
-            {bleDevices.length === 0 && connectionStatus !== 'connecting' && (
-              <p className="text-slate-500 text-xs text-center">
-                Lance un scan pour trouver l'hôte. L'hôte doit être visible dans les réglages Bluetooth de l'appareil.
-              </p>
-            )}
-          </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleBleHost}
+                  disabled={connectionStatus === 'connecting' || connectionStatus === 'bluetooth'}
+                  className="flex-1 py-2.5 bg-cyan-800 hover:bg-cyan-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors"
+                >
+                  {connectionStatus === 'bluetooth' ? '📡 En attente…' : 'Héberger'}
+                </button>
+                <button
+                  onClick={handleBleScan}
+                  disabled={connectionStatus === 'connecting' || connectionStatus === 'bluetooth'}
+                  className="flex-1 py-2.5 bg-cyan-700 hover:bg-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors"
+                >
+                  {connectionStatus === 'connecting' ? 'Scan…' : 'Scanner'}
+                </button>
+              </div>
+
+              {bleError && (
+                <p className="text-red-400 text-xs bg-red-950/40 border border-red-800/50 rounded p-2">
+                  {bleError}
+                </p>
+              )}
+
+              {bleDevices.length > 0 && (
+                <div className="flex flex-col gap-1.5">
+                  <p className="text-slate-400 text-xs">{bleDevices.length} appareil(s) trouvé(s)</p>
+                  {bleDevices.map(device => (
+                    <button
+                      key={device.id}
+                      onClick={() => handleBleConnect(device.id)}
+                      className="flex items-center justify-between px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors"
+                    >
+                      <span>{device.name}</span>
+                      <span className="text-slate-400 text-xs">
+                        {device.rssi != null ? `${device.rssi} dBm` : ''}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {bleDevices.length === 0 && connectionStatus !== 'connecting' && (
+                <p className="text-slate-500 text-xs text-center">
+                  Lance un scan pour trouver l'hôte.
+                </p>
+              )}
+            </div>
+          ) : (
+            <BluetoothDownloadPage />
+          )
         )}
       </div>
 
