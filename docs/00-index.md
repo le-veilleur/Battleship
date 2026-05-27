@@ -14,6 +14,7 @@ Stack : Go (backend), React + TypeScript (frontend), Tauri V2 (desktop), Rust + 
 | [03 — Bluetooth BLE](./03-bluetooth-ble.md) | GATT, Central/Peripheral, CoreBluetooth, subprocess IPC, UUID |
 | [04 — Docker & Déploiement](./04-docker-et-deploiement.md) | Multi-stage build, layer cache, nginx WebSocket proxy, Traefik, 12-factor |
 | [05 — Tauri & Architecture](./05-tauri-et-architecture.md) | invoke/emit, Arc<Mutex>, Zustand, pattern Strategy, capabilities |
+| [06 — Sécurité réseau](./06-securite.md) | CORS, CSRF WebSocket, HSTS, TLS 1.3, DTLS, headers HTTP, Let's Encrypt |
 
 ---
 
