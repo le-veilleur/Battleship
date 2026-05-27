@@ -8,5 +8,9 @@ backend/*.exe
 frontend/node_modules/
 frontend/dist/
 
+# Tauri / Rust build artifacts
+frontend/src-tauri/target/
+
 # Misc
 .DS_Store
+frontend/.env.local

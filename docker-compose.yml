@@ -2,17 +2,30 @@ services:
   backend:
     build:
       context: ./backend
-    ports:
-      - "8080:8080"
+    container_name: battleship-backend
     restart: unless-stopped
+    environment:
+      - ALLOWED_ORIGINS=battleship.maxime-louis.com
+    networks:
+      - proxy
 
   frontend:
     build:
       context: ./frontend
       args:
-        VITE_WS_URL: ws://localhost:8080
-    ports:
-      - "80:80"
+        VITE_WS_URL: wss://battleship.maxime-louis.com/ws
+    container_name: battleship-frontend
+    restart: unless-stopped
     depends_on:
       - backend
-    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.battleship.rule=Host(`battleship.maxime-louis.com`)"
+      - "traefik.http.routers.battleship.entrypoints=web"
+      - "traefik.http.services.battleship.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true

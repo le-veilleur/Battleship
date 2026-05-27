@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"runtime"
 	"time"
 
@@ -23,8 +24,12 @@ func main() {
 	r.Get("/rooms", handler.ServeRooms)
 	r.Get("/leaderboard", handler.ServeLeaderboard)
 
-	log.Printf("server listening on :8080")
-	if err := http.ListenAndServe(":8080", r); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Printf("server listening on :%s", port)
+	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatalf("server error: %s", err)
 	}
 }

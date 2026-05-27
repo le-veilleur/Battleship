@@ -5,9 +5,11 @@ interface Score {
   wins:   number
 }
 
-const API_URL = (import.meta.env.VITE_WS_URL as string | undefined)
+// Option A : URL dynamique si VITE_WS_URL n'est pas défini (même logique que gameStore)
+const httpProto = window.location.protocol
+const API_URL = (import.meta.env['VITE_WS_URL'] as string | undefined)
   ?.replace('ws://', 'http://').replace('wss://', 'https://').replace('/ws', '')
-  ?? 'http://localhost:8080'
+  ?? `${httpProto}//${window.location.hostname}:8080`
 
 export default function Leaderboard() {
   const [scores, setScores] = useState<Score[]>([])
