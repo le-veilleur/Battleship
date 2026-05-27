@@ -56,6 +56,20 @@ function BluetoothDownloadPage() {
       </a>
 
       <p className="text-slate-500 text-xs text-center">macOS uniquement · Bluetooth 4.0+ requis</p>
+
+      {/* Note iPhone */}
+      <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 flex gap-2 items-start">
+        <span className="text-lg leading-none mt-0.5"></span>
+        <div>
+          <p className="text-slate-300 text-xs font-medium mb-0.5">iPhone non supporté</p>
+          <p className="text-slate-500 text-xs leading-relaxed">
+            Apple bloque l'accès Bluetooth depuis Safari et interdit les apps tierces sans passer par l'App Store (99€/an). Le mode Bluetooth est réservé aux Macs.
+          </p>
+          <p className="text-slate-500 text-xs mt-1">
+            Sur iPhone → utilise les modes <span className="text-slate-300">En ligne</span> ou <span className="text-slate-300">Local (P2P)</span> depuis le navigateur.
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
