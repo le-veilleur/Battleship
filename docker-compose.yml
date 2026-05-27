@@ -25,6 +25,7 @@ services:
       - "traefik.http.routers.battleship.rule=Host(`battleship.maxime-louis.com`)"
       - "traefik.http.routers.battleship.entrypoints=web"
       - "traefik.http.services.battleship.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
 
 networks:
   proxy:
