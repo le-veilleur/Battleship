@@ -27,8 +27,9 @@ function BluetoothDownloadPage() {
         {[
           { n: '1', label: 'Télécharger', desc: 'Clique le bouton ci-dessous pour télécharger le .dmg macOS' },
           { n: '2', label: 'Installer', desc: 'Glisse Battleship.app dans ton dossier Applications' },
-          { n: '3', label: 'Ouvrir', desc: 'Lance l\'app → onglet "Bluetooth" disponible' },
-          { n: '4', label: 'Jouer', desc: 'Les deux joueurs lancent l\'app → Héberger / Scanner' },
+          { n: '3', label: 'Autoriser', desc: 'Si macOS bloque l\'app : Terminal → xattr -cr /Applications/Battleship.app' },
+          { n: '4', label: 'Ouvrir', desc: 'Lance l\'app → onglet "Bluetooth" disponible' },
+          { n: '5', label: 'Jouer', desc: 'Les deux joueurs lancent l\'app → Héberger / Scanner' },
         ].map(({ n, label, desc }) => (
           <div key={n} className="flex gap-3 items-start">
             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-700 text-white text-xs font-bold flex items-center justify-center mt-0.5">
@@ -56,6 +57,20 @@ function BluetoothDownloadPage() {
       </a>
 
       <p className="text-slate-500 text-xs text-center">macOS uniquement · Bluetooth 4.0+ requis</p>
+
+      {/* Gatekeeper warning */}
+      <div className="bg-yellow-900/20 border border-yellow-700/40 rounded-lg p-3 flex gap-2 items-start">
+        <span className="text-base leading-none mt-0.5">⚠️</span>
+        <div>
+          <p className="text-yellow-300 text-xs font-medium mb-1">macOS bloque l'app ?</p>
+          <p className="text-slate-400 text-xs leading-relaxed mb-1.5">
+            L'app n'est pas signée (certificat Apple = 99€/an). Si tu vois "endommagé", ouvre le Terminal et colle :
+          </p>
+          <code className="block bg-slate-900 text-cyan-300 text-xs px-2 py-1.5 rounded font-mono select-all">
+            xattr -cr /Applications/Battleship.app
+          </code>
+        </div>
+      </div>
 
       {/* Note iPhone */}
       <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 flex gap-2 items-start">
