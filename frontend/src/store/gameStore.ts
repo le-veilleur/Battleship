@@ -106,7 +106,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   submitPlacement(ships) {
     const { connectionMode, p2pHostGame, p2pPeer, btPeer } = get()
     set({ placedShips: ships })
-    if (connectionMode === 'p2p-host') {
+    if (connectionMode === 'p2p-host' || connectionMode === 'bt-host') {
       p2pHostGame?.placeShips(ships)
       if (get().phase === 'placing') set({ phase: 'waiting' })
     } else if (connectionMode === 'p2p-guest') {
@@ -124,7 +124,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   fire(x, y) {
     if (!get().isMyTurn) return
     const { connectionMode, p2pHostGame, p2pPeer, btPeer } = get()
-    if (connectionMode === 'p2p-host') {
+    if (connectionMode === 'p2p-host' || connectionMode === 'bt-host') {
       p2pHostGame?.fire(x, y)
       set({ isMyTurn: false })
     } else if (connectionMode === 'p2p-guest') {
